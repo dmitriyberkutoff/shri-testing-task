@@ -22,7 +22,7 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
     const btnSizeClass = process.env.BUG_ID !== '9' ? 'btn-lg' : 'btn-sm';
 
     return (
-        <div className={bem(null, ['row'])}>
+        <div data-testid="product-details" className={bem(null, ['row'])}>
             <div className="col-12 col-sm-5 col-lg-4">
                 <Image />
             </div>
@@ -31,7 +31,7 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
                 <p className={bem("Description")}>{product.description}</p>
                 <p className={bem("Price", ['fs-3'])}>${product.price}</p>
                 <p>
-                    <button className={bem("AddToCart", ['btn', 'btn-primary', btnSizeClass])} onClick={onClick}>Add to Cart</button>
+                    <button data-testid="add-btn" className={bem("AddToCart", ['btn', 'btn-primary', btnSizeClass])} onClick={onClick}>Add to Cart</button>
                     <CartBadge id={product.id} />
                 </p>
                 <dl>

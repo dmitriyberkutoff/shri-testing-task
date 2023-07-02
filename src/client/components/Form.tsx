@@ -55,6 +55,7 @@ export const Form: React.FC<FormProps> = ({ onSubmit }) => {
             <div className="mb-3">
                 <label htmlFor="f-name" className="form-label">Name</label>
                 <input
+                    data-testid="name-input"
                     id="f-name"
                     type="text"
                     disabled={sent}
@@ -63,9 +64,10 @@ export const Form: React.FC<FormProps> = ({ onSubmit }) => {
                     onChange={onChangeName} />
                 <div className="invalid-feedback">Please provide your name</div>
             </div>
-            <div className="mb-3">
+            <div data-testid="phone-field" className="mb-3">
                 <label htmlFor="f-phone" className="form-label">Phone</label>
                 <input
+                    data-testid="phone-input"
                     id="f-phone"
                     type="text"
                     disabled={sent}
@@ -76,6 +78,7 @@ export const Form: React.FC<FormProps> = ({ onSubmit }) => {
             <div className="mb-3">
                 <label htmlFor="f-address" className="form-label">Address</label>
                 <textarea
+                    data-testid="address-input"
                     id="f-address"
                     disabled={sent}
                     rows={3}
@@ -84,7 +87,7 @@ export const Form: React.FC<FormProps> = ({ onSubmit }) => {
                 <div className="invalid-feedback">Please provide a valid address</div>
             </div>
 
-            <button className={bem('Submit', ['btn', 'btn-primary'])} disabled={sent} onClick={onClick}>Checkout</button>
+            <button data-testid="submit" className={bem('Submit', ['btn', 'btn-primary'])} disabled={sent} onClick={onClick}>Checkout</button>
         </div>
     );
 }

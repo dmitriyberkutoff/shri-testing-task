@@ -93,11 +93,11 @@ export const Cart: React.FC = () => {
     const alertClass = process.env.BUG_ID !== '8' ? 'alert-success' : 'alert-danger';
 
     const orderInfo = cartIsEmpty && latestOrderId ? (
-        <div className="row my-2">
+        <div data-testid="well-done" className="row my-2">
             <div className="col-12 col-sm-8 col-md-6">
                 <div className={bem('SuccessMessage', ['alert', alertClass])}>
                     <h4 className="alert-heading">Well done!</h4>
-                    <p>Order #<strong className={bem('Number')}>{latestOrderId}</strong> has been successfully completed.</p>
+                    <p data-testid="order-number">Order #<strong className={bem('Number')}>{latestOrderId}</strong> has been successfully completed.</p>
                     <hr/>
                     <p className="mb-0">Please wait for confirmation of delivery.</p>
                 </div>
