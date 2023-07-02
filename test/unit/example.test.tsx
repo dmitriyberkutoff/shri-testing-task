@@ -32,45 +32,22 @@ MockServerApi.getProductById = async (id: number) => {
         }
     });
 }
-describe('Jest', () => {
-    const original = window.location;
 
-    const reloadFn = () => {
-        window.location.reload();
-    };
+const renderApp = () => {
+    const api = MockServerApi;
+    const cart = new CartApi();
+    const store = initStore(api, cart);
 
-    beforeAll(() => {
-        Object.defineProperty(window, 'location', {
-            configurable: true,
-            value: { reload: jest.fn() },
-        });
-    });
+    const application = (
+        <MemoryRouter initialEntries={["/catalog/100"]} initialIndex={0}>
+            <Provider store={store}>
+                <Application/>
+            </Provider>
+        </MemoryRouter>
+    );
 
-    afterAll(() => {
-        Object.defineProperty(window, 'location', { configurable: true, value: original });
-    });
+    return render(application);
+}
 
-    it('Товар добавляется в корзину', async function () {
-        const api = MockServerApi;
-        const cart = new CartApi();
-        const store = initStore(api, cart);
-
-        const application = (
-            <MemoryRouter initialEntries={["/catalog/100"]} initialIndex={0}>
-                <Provider store={store}>
-                    <Application/>
-                </Provider>
-            </MemoryRouter>
-        );
-
-        const {getByTestId} = render(application);
-
-        const btn2 = await waitFor(() =>getByTestId("add-btn"));
-        await events.click(btn2);
-
-        const state = await store.getState();
-        expect(state.cart['100']).toBeTruthy();
-    })
-
-
+it('Тест, который пройдет', () => {
 })

@@ -30,24 +30,6 @@ describe('Тесты скриншотами', () => {
 
         await this.browser.assertView('add-btn', '.ProductDetails-AddToCart');
     })
-    it("Перезагрузка", async function () {
-        const puppeteer = await this.browser.getPuppeteer();
-        const [page] = await puppeteer.pages();
-
-        await page.goto("http://localhost:3000/hw/store/catalog/0?bug_id=" + bug);
-        const btn = await page.waitForSelector(".ProductDetails-AddToCart");
-        await btn.click();
-        await page.reload();
-        await page.waitForSelector(".navbar", {timeout: 1000});
-        await this.browser.assertView("reload", ".navbar");
-        const cart = {
-            key: "example-store-cart",
-            data: {}
-        }
-        await page.evaluate(cart => {
-            window.localStorage.setItem(cart.key, JSON.stringify(cart.data));
-        }, cart);
-    });
 })
 
 it('Правильные данные', async function () {
@@ -63,6 +45,34 @@ it('Правильные данные', async function () {
     }
 })
 
+it("Добавление товара", async function () {
+    const puppeteer = await this.browser.getPuppeteer();
+    const [page] = await puppeteer.pages();
+
+    await page.goto("http://localhost:3000/hw/store/catalog/0?bug_id=" + bug);
+    const cart = {
+        key: "example-store-cart",
+        data: {}
+    }
+    await page.evaluate(cart => {
+        window.localStorage.setItem(cart.key, JSON.stringify(cart.data));
+    }, cart);
+
+    const btn = await page.waitForSelector(".ProductDetails-AddToCart");
+    await btn.click();
+    const cartLink = await this.browser.$('[data-testid="cart"]');
+    const text = await cartLink.getText();
+    assert.equal(text, 'Cart (1)', 'Не работает кнопка добавления');
+    await page.reload();
+    await page.waitForSelector(".navbar", {timeout: 1000});
+
+    await page.evaluate(cart => {
+        window.localStorage.setItem(cart.key, JSON.stringify(cart.data));
+    }, cart);
+
+    await this.browser.assertView("reload", ".navbar");
+});
+
 it('Все товары доступны', async function () {
     const {data: products} = await axios.get(`http://localhost:3000/hw/store//api/products?bug_id=` + bug);
     const puppeteer = await this.browser.getPuppeteer();
@@ -70,8 +80,8 @@ it('Все товары доступны', async function () {
 
     for (const p of products) {
         await page.goto("http://localhost:3000/hw/store/catalog/" + p.id + "?bug_id=" + bug);
-        const d = await page.waitForSelector('[data-testid="product-details"]')
-        assert.ok(d, 'Элемент не загрузился');
+        const details = await page.waitForSelector('[data-testid="product-details"]')
+        assert.ok(details, 'Элемент не загрузился');
     }
 })
 
@@ -102,6 +112,7 @@ it('Процесс оформления заказа', async function () {
     }, cart);
 
     await this.browser.url(`http://localhost:3000/hw/store/cart?bug_id=` + bug);
+    await page.waitForSelector('.mb-3');
 
     const name = await this.browser.$('.Form-Field_type_name');
     const phone = await this.browser.$('.Form-Field_type_phone');
